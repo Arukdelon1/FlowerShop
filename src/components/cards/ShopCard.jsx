@@ -2,9 +2,12 @@ import React from 'react';
 import {Card, Button, ListGroup} from "react-bootstrap";
 
 const ShopCard = (props) => {
+    const ItemInfo = () => {
+        console.log(props.card)
+    }
     return (
         <Card>
-            <Card.Img variant="top"  className={"CItem"} src={props.card.imgurl} />
+            <Card.Img variant="top"  className={"CItem"} src={props.card.imgurl} onClick={ItemInfo} />
             <Card.Body>
                 <Card.Title>{props.card.title}</Card.Title>
                 <Card.Text>

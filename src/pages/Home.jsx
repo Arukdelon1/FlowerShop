@@ -9,8 +9,6 @@ const itemList = [
     {id: 3, imgurl:"images/flower3.jpg", title:"Гіацинт садовий Aqua", code:"90586", t_status:"в наявності", count:"3"},
     {id: 4, imgurl:"images/flower4.jpg", title:"Гінкго Білоба Дволопатеве", code:"25603", t_status:"в наявності", count:"2"}
 ]
-
-
 const Cards = () => {
     return(
         <div>
@@ -18,8 +16,8 @@ const Cards = () => {
                 <Row xs={1} md={4} className="g-1">
                     {itemList.map(item => {
                             return(
-                                <Col>
-                                    <ShopCard key={item.id} card={item}/>
+                                <Col key={item.id}>
+                                    <ShopCard card={item}/>
                                 </Col>
 
                         )})}
@@ -36,8 +34,6 @@ const Home = () => {
             <h2>Акції та знижки</h2>
             <Cards />
             <br/>
-            <h2>Новинки</h2>
-            <Cards />
         </div>
     )
 }
