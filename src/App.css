@@ -32,12 +32,36 @@
   font-size: 18px;
 }
 
+.bton {
+  border-radius: 0!important;
+  fill: gray;
+  border-color: white!important;
+}
+
+.bton:hover{
+  background-color:#fff!important;
+  fill: green;
+}
+
 .link {
   color: black;
   text-decoration: inherit;
 }
 .app-header {
 
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+.row.center {
+  align-items: center;
+}
+.col-1 {
+  flex: 1;
+}
+.col-2 {
+  flex: 2;
 }
 .navbar-menu {
   font-size: 21px;
@@ -50,13 +74,54 @@
   text-align: left;
 }
 .StrL {
-  color: #ee38d6;
+  color: #ffffff;
+  background-color: black;
+  text-align: center;
+  padding: 1rem;
 }
 .CItem {
   width: 100%;
   height: 15vw;
   object-fit: cover;
 }
+
+
+.btn-add {
+  height: 50px;
+  padding: 15px;
+  font-weight: 700;
+  font-size: 2rem;
+  text-decoration: none;
+  text-align: center;
+  transition: all .5s ease;
+}
+
+.btn--doar {
+  color: #fff;
+  padding-right: 0;
+  background-color: #c0392b;
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%);
+
+}
+
+.btn--doar:hover {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+}
+.btn--doar:after {
+  content: "NEW";
+  color: #e74c3c;
+  display: inline-block;
+  position: relative;
+  right: -55px;
+  transition: all 0.2s ease;
+}
+
+.btn--doar:hover:after {
+  margin: -5px 15px;
+  right: 0px;
+}
+
+
 
 h2 {
   text-align: justify;

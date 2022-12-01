@@ -1,22 +1,28 @@
-import React from "react";
+
 import ShopCard from "../components/cards/ShopCard";
 import {Col} from "react-bootstrap";
 import {Row} from "react-bootstrap";
+import {useContext, useEffect, useState} from "react";
+import {firebaseService} from "../context/FirebaseService";
 
 const itemList = [
-    {id: 1, imgurl:"images/flower1.jpg", title:"Тюльпан Тріумф Mata Hari", code:"44907", t_status:"в наявності", count:"1"},
-    {id: 2, imgurl:"images/flower2.jpg", title:"Крокус кімнатний", code:"55537", t_status:"в наявності", count:"4"},
-    {id: 3, imgurl:"images/flower3.jpg", title:"Гіацинт садовий Aqua", code:"90586", t_status:"в наявності", count:"3"},
-    {id: 4, imgurl:"images/flower4.jpg", title:"Гінкго Білоба Дволопатеве", code:"25603", t_status:"в наявності", count:"2"}
+    {imageURL:"images/flower1.jpg", name:"Тюльпан Тріумф Mata Hari", code:"44907"}
 ]
+
 const Cards = () => {
+
+    const [items, setItems] = useState(null)
+    useEffect(() => {
+        setItems(firebaseService.getProducts(firebaseService.db));
+    }, []);
+
     return(
         <div>
             <section className="container">
-                <Row xs={1} md={4} className="g-1">
+                <Row xs={1} md={"auto"} className="justify-content-md-center">
                     {itemList.map(item => {
                             return(
-                                <Col key={item.id}>
+                                <Col key={item.code} style={{padding: "12px"}} className={""}>
                                     <ShopCard card={item}/>
                                 </Col>
 

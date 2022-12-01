@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
+import {firebaseService} from "../context/FirebaseService";
+import {Button} from "react-bootstrap";
 const About = () => {
+
     return(
-        <h1>Про нас</h1>
+        <div></div>
     )
 }
 export {About}
