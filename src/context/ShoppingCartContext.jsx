@@ -1,5 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {LOCALSTORE_TOTALITEMS} from "../models/constants";
+import {firebaseService} from "./FirebaseService";
 
 const ShoppingCartContext = createContext({})
 
@@ -11,7 +12,9 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({children}) {
     const [isOpen, setIsOpen] = useState(false);
     const [totalItems, setTotalItem] = useState([]);
+    const [categoryArray, setCategoryArray] = useState([]);
     const cartQuantity = totalItems.reduce( (quantity, item) => item.quantity + quantity,0 );
+    const [items, setItems] = useState({});
 
 
     const getLocalStore = () => {
@@ -30,6 +33,13 @@ export function ShoppingCartProvider({children}) {
     };
     useEffect(()=>{
         getLocalStore();
+        if(categoryArray.length === 0) {
+            firebaseService.getCategoryArray(firebaseService.db).then((doc) => {
+                setCategoryArray(doc);
+                console.log(categoryArray);
+            })
+        }
+
     },[]);
 
     useEffect(()=>{
@@ -57,6 +67,8 @@ export function ShoppingCartProvider({children}) {
     }
 
     function increaseCartQuantity(itemP, quantity){
+
+        console.log(itemP);
         setTotalItem(currItem => {
             if(currItem.find(item => item.itemP.code=== itemP.code) == null){
                 return [...currItem, {itemP,quantity}]
@@ -101,7 +113,10 @@ export function ShoppingCartProvider({children}) {
                 increaseCartQuantity,
                 decreaseCartQuantity,
                 cartQuantity,
+                categoryArray,
                 totalItems,
+                items,
+                setItems,
                 OpenCart,
                 CloseCart
         }}>

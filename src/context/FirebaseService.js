@@ -1,11 +1,9 @@
 import { initializeApp } from "firebase/app";
-import {getFirestore, collection, getDocs, setDoc, addDoc, doc, query, where, orderBy, limit, deleteDoc} from "firebase/firestore/lite";
+import {getFirestore, collection, getDoc, getDocs, setDoc, addDoc, doc, query, where, orderBy, limit, deleteDoc} from "firebase/firestore/lite";
 import { getAuth, browserLocalPersistence, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup,
     signOut, sendPasswordResetEmail, createUserWithEmailAndPassword  } from "firebase/auth";
 import { firebaseConfig } from "../firebase";
-import React from "react";
 import {getStorage} from "firebase/storage";
-
 
 
 
@@ -19,32 +17,8 @@ class FirebaseService {
         this.storage = getStorage(this.app)
     }
 
-    async getCourses() {
-        const coursesCol = collection(this.db, "courses22");
-        const coursesSnapshot = await getDocs(coursesCol);
-        return coursesSnapshot.docs.map(doc => doc.data());
-    }
 
-    async getTattoo() {
-        const querySnapshot = await getDocs(collection(this.db, "tattoo"));
-        const items = []
-        querySnapshot.forEach((doc) => {
-            console.log(`${doc.id} => ${doc.data()}`);
-            items.push(doc.data())
-        });
-        return items
-    }
 
-    async getTattoo2() {
-        const coursesCol = collection(this.db, "tattoo");
-        const coursesSnapshot = await getDocs(coursesCol);
-        return coursesSnapshot.docs.map(doc => doc.data());
-    }
-
-    async saveTattoo(tattoo) {
-        console.log(tattoo)
-        const tattooRef = await addDoc(collection(this.db, "tattoo"), {tattoo});
-    }
 
     async getTempValue(path, label, value) {
         const q = query(collection(this.db, path), where(label, "==", value));
@@ -99,31 +73,38 @@ class FirebaseService {
         });
     }
 
-
-    async getGroups() {
-        const coursesCol = collection(this.db, "academic-groups");
-        const coursesSnapshot = await getDocs(coursesCol);
-        return coursesSnapshot.docs.map(doc => doc.data());
+    async getCategoryArray(db) {
+        const categCol = collection(db, "category");
+        const categorySnapshot = await getDocs(categCol);
+        return  categorySnapshot.docs.map(doc => doc.data());
     }
 
-    async UploadProduct(name, imageURL) {
-        const productRef = await addDoc(collection(this.db, "products"), {name, imageURL});
+
+    async UploadProduct(name,price,category, uid ,imageURL) {
+        console.log(price)
+        const productRef = await addDoc(collection(this.db, "products"), {name,price,category,uid ,imageURL});
     }
 
     async getProducts(db) {
         const querySnapshot = await getDocs(collection(db, "products"));
         const items = []
         querySnapshot.forEach((doc) => {
-            console.log(`${doc.id} => ${doc.data()}`);
-            items.push(doc.data())
+            items.push([doc.data(), doc.id])
         });
         return items
     }
+    async getUserInfo(db, uId) {
+        const docRef = doc(db, "users", uId);
+        const docSnap = await getDoc(docRef);
+        return docSnap.data()
+    };
 
 
-    async saveUser(email, uid) {
-        const usersRef = doc(this.db, "users", uid);
-        return setDoc(usersRef, { email }, { merge: true });
+
+    async saveUser(email, password, name, surname,db, uid) {
+        const usersRef = doc(db, "users", uid);
+
+        return setDoc(usersRef, { email, password, name, surname, role: "user" }, { merge: true });
     }
 
     async login(email, password) {
@@ -131,16 +112,11 @@ class FirebaseService {
     }
 
     async signup(email, password, name, surname) {
-        return await createUserWithEmailAndPassword(this.auth, email, password)
-            .then(async (userCredential) => {
-                const user = userCredential.user;
-                const usersRef = doc(this.db, "users", user.uid);
-                await setDoc(usersRef, {name, surname,email, userCredential }, { merge: true });
-                return userCredential;
-            }).catch(err => {
-                console.log("err", err);
-                return err;
-            });
+        const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+        const user = userCredential.user;
+        const usersRef = doc(this.db, "users", user.uid);
+        await setDoc(usersRef, { email, name, surname, role: "user" }, { merge: true });
+        return userCredential;
     }
 
 

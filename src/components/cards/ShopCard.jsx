@@ -28,6 +28,8 @@ const ShopCard = (props) => {
 
 
     const AddItem = () => {
+        props.card.code = props.skey;
+        console.log(props.card.code);
         increaseCartQuantity(props.card, quantity);
     }
 
@@ -38,9 +40,11 @@ const ShopCard = (props) => {
 
     return (
         <Card style={{ width: '20rem', height: "28rem",  borderRadius: "0"}} onMouseEnter={() => setIsHower(!isHower)} onMouseLeave={() => setIsHower(!isHower)}>
-            <Card.Img variant="top"  style={{ width: '100%', height: "40%", borderRadius: "0" }}  className={"CItem"} src={props.card.imageURL} onClick={ItemInfo} />
+            <Card.Img variant="top"  style={{ width: '100%', height: "80%", borderRadius: "0" }}  className={"CItem"} src={props.card.imageURL} onClick={ItemInfo} />
             <Card.Body>
-                <Card.Title>{props.card.name}</Card.Title>
+                <Card.Title><div  style={{fontSize: "17px"}}>{props.card.name}</div>
+                    <div className={"float-start"}><strong>Ціна:</strong> від {props.card.price} грн/шт</div>
+                </Card.Title>
                 <Card.Text>
                 </Card.Text>
             </Card.Body>

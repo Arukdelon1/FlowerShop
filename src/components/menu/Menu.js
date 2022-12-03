@@ -3,10 +3,13 @@ import {Navbar, Container, Nav, Button} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {useShoppingCart} from "../../context/ShoppingCartContext";
 import { useNavigate } from "react-router-dom";
+import {useContext} from "react";
+import {UserContext} from "../../context/UserContext";
 
 
 const Menu = () => {
     const {OpenCart, cartQuantity} = useShoppingCart();
+    const {user} = useContext(UserContext)
 
     let navigate = useNavigate();
     const userRoute = () =>{
@@ -27,9 +30,12 @@ const Menu = () => {
                 <Nav className="navbar navbar-dark bg-dark me-auto">
                     <Nav.Link as = {Link} to="about">Про нас</Nav.Link>
                 </Nav>
-                    <Button onClick={addProductRoute} className={"btn-add btn--doar "} style={{marginRight: "10px"}} variant={"outline-light"}>
-                       ДОДАТИ ТОВАР
-                    </Button>
+                    {user.auth && user.role === "salesman"  ?
+                    <Button onClick={addProductRoute} className={"btn-add btn--doar "} style={{marginRight: "10px"}}
+                            variant={"outline-light"}>
+                        ДОДАТИ ТОВАР
+                    </Button>:null
+                    }
                     <Button onClick={OpenCart} style={{width: "3rem",height: "3rem", position: "relative"}} variant={"outline-light"} className={"rounded-circle"}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                              className="bi bi-basket3-fill" viewBox="0 0 16 16">

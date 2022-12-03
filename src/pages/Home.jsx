@@ -4,27 +4,32 @@ import {Col} from "react-bootstrap";
 import {Row} from "react-bootstrap";
 import {useContext, useEffect, useState} from "react";
 import {firebaseService} from "../context/FirebaseService";
+import {useShoppingCart} from "../context/ShoppingCartContext";
 
 const itemList = [
     {imageURL:"images/flower1.jpg", name:"Тюльпан Тріумф Mata Hari", code:"44907"}
 ]
 
 const Cards = () => {
-
-    const [items, setItems] = useState(null)
+    const {items, setItems} = useShoppingCart()
     useEffect(() => {
-        setItems(firebaseService.getProducts(firebaseService.db));
+        if(items.length === undefined) {
+            firebaseService.getProducts(firebaseService.db).then((doc) => {
+                setItems(doc);
+            })
+        }
+
     }, []);
 
     return(
         <div>
             <section className="container">
                 <Row xs={1} md={"auto"} className="justify-content-md-center">
-                    {itemList.map(item => {
-                            return(
-                                <Col key={item.code} style={{padding: "12px"}} className={""}>
-                                    <ShopCard card={item}/>
-                                </Col>
+                    {Array.from(items).map(item => {
+                        return(
+                            <Col key={item[1]} style={{padding: "12px"}} className={""}>
+                                <ShopCard skey={item[1]} card={item[0]}/>
+                            </Col>
 
                         )})}
                 </Row>
@@ -38,7 +43,7 @@ const Home = () => {
         <div className="container">
             <br/>
             <h2>Акції та знижки</h2>
-            <Cards />
+            <Cards  />
             <br/>
         </div>
     )

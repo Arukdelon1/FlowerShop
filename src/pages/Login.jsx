@@ -23,7 +23,6 @@ const Login = () => {
     const [passError, setPassError] = useState("");
 
     const [isSend, setIsSend] = useState(false);
-
     const [isMessage, setIsMessage] = useState(false);
     const [message, setMessage] = useState({});
 
@@ -63,9 +62,10 @@ const Login = () => {
         } else {
             firebaseService.login(emailInput, passInput)
                 .then(userAuth => {
-                    setUser({...user, email: emailInput, name: nameInput, surname: surnameInput,
-                        auth: userAuth});
-                    firebaseService.saveUser(emailInput, userAuth.user.uid);
+                    firebaseService.getUserInfo(firebaseService.db, userAuth.user.uid).then((info)=>
+                        setUser({...user, email: emailInput, role: info.role, name: info.name,
+                            auth: userAuth})
+                    );
                 }).catch(err => {
                 console.log(err);
             });

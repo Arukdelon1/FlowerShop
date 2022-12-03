@@ -7,7 +7,7 @@ import {Header} from "./components/Header";
 import {Basket} from "./components/basket/Basket";
 import {ShoppingCartProvider} from "./context/ShoppingCartContext";
 import Login from "./pages/Login";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {UserContext} from "./context/UserContext";
 import {AddProduct} from "./pages/AddProduct";
 
@@ -17,6 +17,7 @@ function App() {
         email: "",
         name: "",
         pass: "",
+        role: "",
         auth: null,
     });
 
@@ -28,10 +29,11 @@ function App() {
         {path: "/login", element: <Login/>},
         {path: "/addProduct", element: <AddProduct/>},
     ];
+
   return (
       <ShoppingCartProvider>
           <UserContext.Provider value={{user, setUser}}>
-      <BrowserRouter>
+              <BrowserRouter>
           <div className="App">
               <header>
                   <Header/>
