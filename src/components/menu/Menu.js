@@ -30,7 +30,7 @@ const Menu = () => {
                 <Nav className="navbar navbar-dark bg-dark me-auto">
                     <Nav.Link as = {Link} to="about">Про нас</Nav.Link>
                 </Nav>
-                    {user.auth && user.role === "salesman"  ?
+                    {user && user.auth && user.role === "salesman"  ?
                     <Button onClick={addProductRoute} className={"btn-add btn--doar "} style={{marginRight: "10px"}}
                             variant={"outline-light"}>
                         ДОДАТИ ТОВАР

@@ -23,7 +23,7 @@ const Header = () => {
     }, []);
 
     useEffect(()=>{
-        if(user.auth !== null) {
+        if(user && user.auth !== null) {
             window.localStorage.setItem(LOCALSTORE_USER, JSON.stringify(user));
             console.log(user);
         }

@@ -14,7 +14,7 @@ const UserPage = () => {
 
     return (
         <div className="container-fluid">
-            {user.auth ? <Profile/> : <Login/> }
+            {user && user.auth ? <Profile/> : <Login/> }
         </div>
     );
 }
