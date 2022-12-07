@@ -1,7 +1,6 @@
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Home} from './pages/Home';
-import {About} from './pages/About';
 import {UserPage} from './pages/Userpage';
 import {Header} from "./components/Header";
 import {Basket} from "./components/basket/Basket";
@@ -10,6 +9,7 @@ import Login from "./pages/Login";
 import {useContext, useState} from "react";
 import {UserContext} from "./context/UserContext";
 import {AddProduct} from "./pages/AddProduct";
+import Footer from "./components/menu/Footer";
 
 function App() {
 
@@ -23,11 +23,11 @@ function App() {
 
     const routes = [
         {path: "/", element: <Home/>},
-        {path: "/about", element: <About/>},
         {path: "/user", element: <UserPage/>},
         {path: "/basket", element: <Basket/>},
         {path: "/login", element: <Login/>},
         {path: "/addProduct", element: <AddProduct/>},
+        {path: "/basket", element: <Basket/>},
     ];
 
   return (
@@ -42,7 +42,7 @@ function App() {
                   {routes.map((item,index) =>
                       <Route key={index} path={item.path} element={item.element}/>)}
               </Routes>
-              <footer>footer</footer>
+              <Footer></Footer>
           </div>
       </BrowserRouter>
           </UserContext.Provider>

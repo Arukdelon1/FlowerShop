@@ -3,6 +3,7 @@ import { UserContext } from "../context/UserContext";
 import { Button, Form } from "react-bootstrap";
 import {firebaseService} from "../context/FirebaseService";
 import Message from "../components/messages/Message";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
     const { user, setUser } = useContext(UserContext);
@@ -25,6 +26,14 @@ const Login = () => {
     const [isSend, setIsSend] = useState(false);
     const [isMessage, setIsMessage] = useState(false);
     const [message, setMessage] = useState({});
+
+    let navigate = useNavigate();
+    const routeChange = () =>{
+        let path = `/`;
+        navigate(path);
+    }
+
+
 
     const login = (e) => {
         e.preventDefault();
@@ -63,13 +72,14 @@ const Login = () => {
             firebaseService.login(emailInput, passInput)
                 .then(userAuth => {
                     firebaseService.getUserInfo(firebaseService.db, userAuth.user.uid).then((info)=>
-                        setUser({...user, email: emailInput, role: info.role, name: info.name,
+                        setUser({...user, email: emailInput, role: info.role, name: info.name, surname: info.surname,
                             auth: userAuth})
                     );
                 }).catch(err => {
                 console.log(err);
             });
         }
+        routeChange();
 
     }
 

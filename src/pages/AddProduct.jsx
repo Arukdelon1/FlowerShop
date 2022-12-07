@@ -7,6 +7,7 @@ import {firebaseService} from "../context/FirebaseService";
 import storage from "../firebase"
 import {useShoppingCart} from "../context/ShoppingCartContext";
 import {UserContext} from "../context/UserContext";
+import {useNavigate} from "react-router-dom";
 
 const metadata = {
     contentType: 'image/jpeg'
@@ -21,11 +22,14 @@ const AddProduct = () => {
 
     const [file, setFile] = useState("");
     const [percent, setPercent] = useState(0);
+    const [discountBool, setDiscountBool] = useState(false);
     const [nameInput, setNameInput] = useState("");
+    const [discount, setDiscountInput] = useState(0);
     const [priceInput, setPriceInput] = useState(0);
     const [categoryInput, setCategoryInput] = useState("");
     const [categoryInputOptions, setCategoryInputOptions] = useState([]);
     const [nameError, setNameError] = useState("");
+    const [discountError, setDiscountError] = useState("");
     const [priceError, setPriceError] = useState("");
     const [categoryError, setCategoryError] = useState("");
     const [imageError, setImageError] = useState("");
@@ -41,6 +45,11 @@ const AddProduct = () => {
             setCategoryInputOptions(categoryArray);
         }
     }
+    let navigate = useNavigate();
+    const routeChange = () =>{
+        let path = `/`;
+        navigate(path);
+    }
 
     useEffect(() => {
         LoadCategory();
@@ -52,6 +61,7 @@ const AddProduct = () => {
         let isError = false;
         setNameError("");
         setPriceError("");
+        setDiscountError("");
         setCategoryError("");
         setImageError("");
         setIsSend(true);
@@ -67,6 +77,10 @@ const AddProduct = () => {
             setPriceError("Введіть ціну");
             isError = true;
         }
+        if (discountBool && discount <= 0 || discount >= 100 ) {
+            setDiscountError("Не виходіть за поріг від 0 до 100");
+            isError = true;
+        }
         if (!file) {
             setImageError("Виберіть картинку");
             isError = true;
@@ -75,6 +89,12 @@ const AddProduct = () => {
             return;
         }
 
+        if(!discountBool) {
+            setDiscountInput(0);
+            console.log("Without disocunt")
+        }
+
+
         console.log("sec Adding produnc")
         const storageRef = ref(firebaseService.storage, `/files/${file.name}`)
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -82,18 +102,16 @@ const AddProduct = () => {
         uploadTask.on(
         "state_changed",
         (snapshot) => {
-            const percent = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            setPercent(percent);
         },
         (err) => console.log(err),
         () => {
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                firebaseService.UploadProduct(nameInput,priceInput,categoryInput, user.auth.lastNotifiedUid , url);
+                firebaseService.UploadProduct(nameInput,priceInput,categoryInput, discount, user.auth.user.uid , url);
             });
         }
     );
+        console.log("produnc added")
+        routeChange();
 }
 
 
@@ -106,18 +124,21 @@ const AddProduct = () => {
         setFile(files[0]);
         setIsUpload(true);
     }
+    const onSwitchAction = () => {
+        setDiscountBool(!discountBool);
+    };
 
 
     return(
-        <div className="rowjustify-content-center container">
+        <div className=" container justify-content-center" style={{paddingTop:"100px", paddingBottom:"185px"}}>
             <Row>
-                <Col className="main-min-height row align-items-center justify-content-end" sm={4}>
-            <Card style={{ width: '18rem' }}>
+                <Col className="row justify-content-end" sm={4}>
+            <Card style={{ width: '18rem', height: '23rem'}}>
                 {isUpload ?
-                    <Card.Img className="justify-content-center" style={{marginTop: "20px"}} variant="top" src={URL.createObjectURL(file)} /> : ""
+                    <Card.Img  style={{marginTop: "10px"}} variant="top" src={URL.createObjectURL(file)} /> : ""
                 }
                 {!isUpload ?
-                    <Card.Img variant="top" src="no-photo-small.jpg"  /> : ""
+                    <Card.Img style={{marginTop: "10px"}}  variant="top" src="no-photo-small.jpg"  /> : ""
                 }
                 <Card.Body>
                     <Form.Group controlId="formFile" className="mb-3">
@@ -172,6 +193,28 @@ const AddProduct = () => {
                     </Form.Select>
                     <Form.Control.Feedback type="invalid">
                         {categoryError}
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group className="mb-4 col-12 align-items-start" controlId="switch">
+                    <Form.Label className="float-start">Знижка</Form.Label>
+                    <Form.Check
+                        onChange={onSwitchAction}
+                        checked={discountBool}
+                        style={{paddingLeft: "50px"}}
+                        className={"d-flex"}
+                        type="switch"
+                        id="custom-switch"
+                    />
+                    {discountBool ?
+                        <Form.Control type="number" placeholder="Кількість у %"
+                                      value={discount}
+                                      onChange={e => setDiscountInput(e.target.value)}
+                                      isValid={isSend && discountError.length === 0}
+                                      isInvalid={isSend && discountError.length > 0}
+                        />:null
+                    }
+                    <Form.Control.Feedback type="invalid">
+                        {discountError}
                     </Form.Control.Feedback>
                 </Form.Group>
             </Form>

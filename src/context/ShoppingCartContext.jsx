@@ -22,7 +22,6 @@ export function ShoppingCartProvider({children}) {
         {
             return;
         }
-        console.log("loading");
         setTotalItem([]);
         let cardsLocal = window.localStorage.getItem(LOCALSTORE_TOTALITEMS);
         cardsLocal = cardsLocal ? JSON.parse(cardsLocal) : cardsLocal;
@@ -36,7 +35,6 @@ export function ShoppingCartProvider({children}) {
         if(categoryArray.length === 0) {
             firebaseService.getCategoryArray(firebaseService.db).then((doc) => {
                 setCategoryArray(doc);
-                console.log(categoryArray);
             })
         }
 
@@ -45,7 +43,6 @@ export function ShoppingCartProvider({children}) {
     useEffect(()=>{
         if(totalItems.length > 0) {
             window.localStorage.setItem(LOCALSTORE_TOTALITEMS, JSON.stringify(totalItems));
-            console.log(totalItems);
         }
 
     }, [totalItems]);
@@ -67,14 +64,12 @@ export function ShoppingCartProvider({children}) {
     }
 
     function increaseCartQuantity(itemP, quantity){
-
-        console.log(itemP);
         setTotalItem(currItem => {
-            if(currItem.find(item => item.itemP.code=== itemP.code) == null){
+            if(currItem.find(item => item.itemP === itemP) == null){
                 return [...currItem, {itemP,quantity}]
             } else {
                 return  currItem.map(item => {
-                    if(item.itemP.code === itemP.code) {
+                    if(item.itemP === itemP) {
                         return {...item,quantity: item.quantity + quantity}
                     } else {
                         return item;

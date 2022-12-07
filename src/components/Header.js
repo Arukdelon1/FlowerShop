@@ -11,7 +11,6 @@ const Header = () => {
     const {user, setUser} = useContext(UserContext);
 
     useEffect(() => {
-        console.log("reload user");
         if(user.auth !== null)
         {
             return;
@@ -25,7 +24,6 @@ const Header = () => {
     useEffect(()=>{
         if(user && user.auth !== null) {
             window.localStorage.setItem(LOCALSTORE_USER, JSON.stringify(user));
-            console.log(user);
         }
 
     }, [user]);

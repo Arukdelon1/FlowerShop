@@ -6,14 +6,13 @@ import {Profile} from "./Profile";
 
 const UserPage = () => {
     const { user, setUser } = useContext(UserContext);
-    console.log("user", user);
 
     useEffect(() => {
 
     }, []);
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid" style={{position:"relative", marginTop:"174px",marginBottom:"175px"}}>
             {user && user.auth ? <Profile/> : <Login/> }
         </div>
     );

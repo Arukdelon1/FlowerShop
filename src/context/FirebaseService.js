@@ -18,61 +18,6 @@ class FirebaseService {
     }
 
 
-
-
-    async getTempValue(path, label, value) {
-        const q = query(collection(this.db, path), where(label, "==", value));
-        console.log(q);
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
-        });
-        return querySnapshot.docs.map(doc => doc.data());
-    }
-
-    async getTemp(path) {
-        const q = query(collection(this.db, path));
-        console.log(q);
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
-        });
-        return querySnapshot.docs.map(doc => doc.data());
-    }
-
-    async deleteDocument(path, id) {
-        console.log("delete");
-
-        firebaseService.getTempValue(path, "id", id).then(async (doc) => {
-            console.log("start delete");
-            console.log(doc);
-            const querySnapshot = await getDocs();
-            querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
-            });
-
-
-        }).catch(err => {
-            console.log(err);
-        });
-    }
-
-    async deleteDocument2(path, id) {
-        console.log("delete");
-
-        firebaseService.getTempValue(path, "id", id).then(async (doc) => {
-            console.log("start delete");
-            console.log(doc);
-            await deleteDoc(doc(this.db, path, doc));
-
-        }).catch(err => {
-            console.log(err);
-        });
-    }
-
     async getCategoryArray(db) {
         const categCol = collection(db, "category");
         const categorySnapshot = await getDocs(categCol);
@@ -80,13 +25,21 @@ class FirebaseService {
     }
 
 
-    async UploadProduct(name,price,category, uid ,imageURL) {
-        console.log(price)
-        const productRef = await addDoc(collection(this.db, "products"), {name,price,category,uid ,imageURL});
+    async UploadProduct(name,price,category,discount, uid ,imageURL) {
+        const productRef = await addDoc(collection(this.db, "products"), {name,price,category,discount, uid ,imageURL});
     }
 
     async getProducts(db) {
         const querySnapshot = await getDocs(collection(db, "products"));
+        const items = []
+        querySnapshot.forEach((doc) => {
+            items.push([doc.data(), doc.id])
+        });
+        return items
+    }
+    async getDiscountProducts(db) {
+        const q = query(collection(db, "products"), where("discount", "!=", "0"));
+        const querySnapshot = await getDocs(q);
         const items = []
         querySnapshot.forEach((doc) => {
             items.push([doc.data(), doc.id])

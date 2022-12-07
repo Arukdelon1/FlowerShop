@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-color: white;
+  background-color: lightgray!important;
 }
 
 
@@ -126,9 +126,7 @@
 h2 {
   text-align: justify;
 }
-.footer {
-  ;
-}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -137,3 +135,5 @@ h2 {
     transform: rotate(360deg);
   }
 }
+
+
